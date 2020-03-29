@@ -30,7 +30,7 @@ public class Main {
 
     //TODO: to implement
     private static Sheet getSheet() {
-        return new Sheet(10 , 10);
+        return new Sheet(11 , 11);
     }
 
     //TODO: to implement
@@ -67,45 +67,81 @@ public class Main {
     }
 
     private static boolean findPositionAndDrawIfPossible(Element element, int[][] board) {
-        int[] result = findFirstAvailableCell(board);
-        int x = result[1];
-        int y = result[0];
+        int[] result;
+        try {
+            result = findFirstAvailableCell(board);
+        } catch (RuntimeException ex) {
+            return false;
+        }
+        int x;
+        int y;
         while (true) {
-            if (x > board[0].length) {
+            x = result[1];
+            y = result[0];
+            if (x >= board[0].length - 1) {
                 return false;
             }
 
-            if (y > board.length) {
+            if (y >= board.length - 1) {
                 return false;
             }
 
             if (checkPosibilityToDrawElement(board, element, result)) {
-                board = drawElementOnBoard(board, element, x, y);
+                drawElementOnBoard(board, element, x, y);
                 return true;
             } else {
                 element.swap();
                 if (checkPosibilityToDrawElement(board, element, result)) {
-                    board = drawElementOnBoard(board, element, x, y);
+                    drawElementOnBoard(board, element, x, y);
                     return true;
                 }
             }
-
-            try {
-                result = findFirstAvailableCellFromCell(board, x, y);
-                x = result[1];
-                y = result[0];
-            } catch (RuntimeException ex) {
-                return false;
-            }
-
-            if (x == board[0].length - 1) {
-                y++;
-                x = 0;
-            } else {
-                x++;
-            }
         }
     }
+
+//    private static boolean findPositionAndDrawIfPossible(Element element, int[][] board) {
+//        int[] result = findFirstAvailableCell(board);
+//        int x = result[1];
+//        int y = result[0];
+//        while (true) {
+//            if (x >= board[0].length - 1) {
+//                return false;
+//            }
+//
+//            if (y >= board.length - 1) {
+//                return false;
+//            }
+//
+//            if (checkPosibilityToDrawElement(board, element, result)) {
+//                board = drawElementOnBoard(board, element, x, y);
+//                return true;
+//            } else {
+//                System.out.println("Nie udało sie narysować elementu " + element.getId() + " w pozycji X=" + x + " Y=" + y + " i robimy swap!");
+//                element.swap();
+//                if (checkPosibilityToDrawElement(board, element, result)) {
+//                    board = drawElementOnBoard(board, element, x, y);
+//                    System.out.println("Udało sie narysować elementu  " + element.getId() + " w pozycji X=" + x + " Y=" + y + " i robimy swap!");
+//                    return true;
+//                }
+//                System.out.println("Nie udało sie narysować elementu  " + element.getId() + " po swapie w pozycji X=" + x + " Y=" + y);
+//            }
+//
+//            try {
+//                result = findFirstAvailableCellFromCell(board, x, y);
+//                x = result[1];
+//                y = result[0];
+//            } catch (RuntimeException ex) {
+//                return false;
+//            }
+//
+//            if (x == board[0].length - 1) {
+//                y++;
+//                x = 0;
+//            } else {
+//                x++;
+//            }
+//        }
+//    }
 
 //    private static boolean findPositionAndDrawIfPossible(Element element, int[][] board) {
 //        boolean canDraw;
@@ -161,7 +197,7 @@ public class Main {
         throw new RuntimeException();
     }
 
-    public static int[] findFirstAvailableCell(int[][] board) {
+    public static int[] findFirstAvailableCell(int[][] board) throws RuntimeException {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0 ; j < board[i].length; j++) {
                 if (board[i][j] == -1) {
@@ -170,7 +206,19 @@ public class Main {
                 }
             }
         }
-        return new int[] {-1, -1};
+        throw new RuntimeException();
+    }
+
+    public static int[] findNextAvailableCell(int[][] board, int x, int y) throws RuntimeException {
+        for (int i = y; i < board.length; i++) {
+            for (int j = x + 1 ; j < board[i].length; j++) {
+                if (board[i][j] == -1) {
+                    System.out.println("[ZR]Znaleziona wolna komórka X: " + j + " Y: " + i);
+                    return new int[] {i, j};
+                }
+            }
+        }
+        throw new RuntimeException();
     }
 
     public static int[][] drawElementOnBoard(int[][] board, Element element, int x, int y) {
