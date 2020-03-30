@@ -1,5 +1,7 @@
 package com.miquido.zadanie;
 
+import java.util.Objects;
+
 public class Sheet {
     private Integer x;
     private Integer y;
@@ -31,5 +33,19 @@ public class Sheet {
                 "x=" + x +
                 ", y=" + y +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sheet sheet = (Sheet) o;
+        return Objects.equals(getX(), sheet.getX()) &&
+                Objects.equals(getY(), sheet.getY());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getX(), getY());
     }
 }

@@ -1,5 +1,7 @@
 package com.miquido.zadanie;
 
+import java.util.Objects;
+
 public class Element{
 
     private Integer id;
@@ -9,6 +11,16 @@ public class Element{
     private Integer area;
     private Direction direction;
     private Double profitability;
+
+    public Element(Integer id, Integer x, Integer y, Integer points) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.area = x * y;
+        this.points = points;
+        this.direction = getDirection(x, y);
+        this.profitability = points.doubleValue() / this.area.doubleValue();
+    }
 
     public Integer getId() {
         return id;
@@ -66,16 +78,6 @@ public class Element{
         this.profitability = profitability;
     }
 
-    public Element(Integer id, Integer x, Integer y, Integer points) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.area = x * y;
-        this.points = points;
-        this.direction = getDirection(x, y);
-        this.profitability = points.doubleValue() / this.area.doubleValue();
-    }
-
     private Direction getDirection(Integer x, Integer y) {
         if (x > y) {
             return Direction.HORIZONTAL;
@@ -98,5 +100,24 @@ public class Element{
     public String toString() {
         return "{ Element with ID: " + this.id +  ", X: " + this.x + ", Y:" + this.y + ", Points: " + this.points +
         ", Direction: " + this.direction.toString() + ", Profitability: " + this.profitability + " }";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Element element = (Element) o;
+        return Objects.equals(getId(), element.getId()) &&
+                Objects.equals(getX(), element.getX()) &&
+                Objects.equals(getY(), element.getY()) &&
+                Objects.equals(getPoints(), element.getPoints()) &&
+                Objects.equals(getArea(), element.getArea()) &&
+                getDirection() == element.getDirection() &&
+                Objects.equals(getProfitability(), element.getProfitability());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getX(), getY(), getPoints(), getArea(), getDirection(), getProfitability());
     }
 }
